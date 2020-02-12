@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"typescript.tsdk": "node_modules\\typescript\\lib",
+		"window.title": "${rootName}${separator}${dirty}${activeEditorShort}${separator}${appName}",
+		"editor.foldingStrategy": "indentation"
+	}
+}
