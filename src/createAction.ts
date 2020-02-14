@@ -4,7 +4,7 @@ import isPrimitiveType from "is-primitive";
 import isPlainObject from "is-plain-object";
 
 import { Imdux } from "./types";
-import { notInitialized, wrongModify, payloadNotValid } from "./error";
+import { notInitialized, payloadNotValid, wrongModify } from "./error";
 
 export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.Action<S, R> {
     return new class Action<S, R> implements Imdux.Action<S, R>{
@@ -13,7 +13,7 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
         dispatch: any;
         reducers: any;
         reducer: any;
-        options: Imdux.createStoreOptions
+        options: Imdux.createStoreOptions;
 
         constructor() {
             this.dispatch = {};
@@ -31,29 +31,28 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
                 } else {
                     return state;
                 }
-            }
+            };
             Object.keys(params.reducers).forEach(name => {
-                let reducer = params.reducers[name];
+                const reducer = params.reducers[name];
                 this.reducers[name] = (state: any, payload: any) => produce(state, (draft: any) => reducer(draft, payload));
                 this.dispatch[name] = (payload: any) => {
                     if (!this.redux) {
                         throw new Error(notInitialized);
                     } else {
-                        if (!isPlainObject(payload) && !isPrimitiveType(payload)) {
+                        if (!isPlainObject(payload) && !isPrimitiveType(payload) && !Array.isArray(payload)) {
                             payload = undefined;
                             this.options.payloadNotValidWarn && console.warn(payloadNotValid);
                         }
-                        this.redux.dispatch({ type: `${this.name}.${name}`, payload })
+                        this.redux.dispatch({ type: `${this.name}.${name}`, payload });
                     }
                 };
-            })
+            });
         }
 
         get query() {
             if (!this.redux) {
-                throw new Error(notInitialized)
+                throw new Error(notInitialized);
             } else {
-                debugger
                 return Object.freeze(this.redux.getState()[this.name]);
             }
         }
@@ -61,5 +60,5 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
         set query(value: any) {
             throw new Error(wrongModify);
         }
-    }
+    }();
 }

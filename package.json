@@ -1,13 +1,14 @@
 {
     "name": "imdux",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "A redux helper for react & hooks & typescript developers.",
     "main": "dist/imdux.js",
     "types": "src/types.d.ts",
     "scripts": {
         "test": "jest",
         "dev": "webpack-dev-server --config webpack.dev.config",
-        "pack": "webpack --config webpack.dist.config"
+        "pack": "webpack --config webpack.dist.config",
+        "lint": "node_modules/.bin/tslint -p tsconfig.json --fix"
     },
     "files": [
         "dist/imdux.js",

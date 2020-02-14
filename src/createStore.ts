@@ -1,6 +1,6 @@
 import * as Redux from "redux";
 
-import { Imdux } from "./types"
+import { Imdux } from "./types";
 import { wrongModify } from "./error";
 
 export function createStore<T extends Imdux.Actions>(actions: T, opt?: Partial<Imdux.createStoreOptions>): Imdux.Store<T> {
@@ -14,11 +14,11 @@ export function createStore<T extends Imdux.Actions>(actions: T, opt?: Partial<I
             this.Query = {};
             const options: Imdux.createStoreOptions = { devtool: false, payloadNotValidWarn: true, ...(opt || {}) };
 
-            const reducers: any = {}
+            const reducers: any = {};
             Object.keys(actions).forEach(name => {
-                let action = actions[name] as any;
+                const action = actions[name] as any;
                 reducers[name] = action.reducer;
-            })
+            });
             const rootReducer = Redux.combineReducers(reducers);
             this.redux = Redux.createStore(
                 rootReducer,
@@ -26,7 +26,7 @@ export function createStore<T extends Imdux.Actions>(actions: T, opt?: Partial<I
             );
 
             Object.keys(actions).forEach(name => {
-                let action = actions[name] as any;
+                const action = actions[name] as any;
                 action.options = options;
                 action.redux = this.redux;
                 action.name = name;
@@ -37,9 +37,9 @@ export function createStore<T extends Imdux.Actions>(actions: T, opt?: Partial<I
                     },
                     set() {
                         throw new Error(wrongModify);
-                    }
-                })
-            })
+                    },
+                });
+            });
         }
-    }
+    }();
 }

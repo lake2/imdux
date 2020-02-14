@@ -1,4 +1,4 @@
-import { createAction } from "./createAction"
+import { createAction } from "./createAction";
 import { createStore } from "./createStore";
 
-export { createAction, createStore }
+export { createAction, createStore };
