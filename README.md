@@ -97,8 +97,6 @@ enjoy it~ 很简单，对不对？
 
 打开redux的devtool，通过点击`increase`和`decrease`button，我们可以看到状态变更的历史记录：
 
-![image-20200211213948480](C:\Users\LH\AppData\Roaming\Typora\typora-user-images\image-20200211213948480.png)
-
 通过观察可以发现，`counter.increase`中的`counter`等于` createStore({ counter })`中的`counter`，而`counter.increase`中的`increase`等于`reducers`中的`increase`，也就是说，imdux会自动帮你创建redux中的action.type，你再也不需要定义字符串、写switch...case、那一套东西了。
 
 对于typescript用户，你需要在`store.ts`中带上类型：
@@ -129,9 +127,7 @@ export const { Dispatch } = store;
 
 这样你就可以很轻松地获得typescript的类型检查和代码提示：
 
-![image-20200211222624322](C:\Users\LH\AppData\Roaming\Typora\typora-user-images\image-20200211222624322.png)
-
-你可以在浏览器中打开这个例子： [javascript](https://codesandbox.io/s/imdux-start-javascript-3049f?fontsize=14&hidenavigation=1&theme=dark)  typescript
+你可以在浏览器中打开这个例子： [javascript](https://codesandbox.io/s/imdux-start-javascript-3049f?fontsize=14&hidenavigation=1&theme=dark)   [typescript](https://codesandbox.io/s/imdux-start-typescript-7wz5u?fontsize=14&hidenavigation=1&theme=dark)
 
 
 ### Imdux API
