@@ -2,6 +2,8 @@ language: node_js
 node_js:
   - "12"
 
+script: echo "Running tests against $(node -v)..."
+
 jobs:
 include:
   - stage: Produce Coverage
