@@ -6,7 +6,7 @@
     "types": "src/types.d.ts",
     "scripts": {
         "test": "jest",
-        "cover": "istanbul cover --report lcov node_modules/mocha/bin/_mocha -- -R spec test/*.js",
+        "cover": "jest --coverage --coverageReporters=text-lcov | coveralls",
         "dev": "webpack-dev-server --config webpack.dev.config",
         "pack": "webpack --config webpack.dist.config",
         "lint": "node_modules/.bin/tslint -p tsconfig.json --fix"
