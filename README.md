@@ -2,7 +2,7 @@
 <h1 align="center">Imdux</h1>
 <p align="center">🌈 A redux helper for react & hooks & typescript developers.</p>
 <p align="center">
-<a target="_blank" href="https://travis-ci.org/lake2/imdux"><img src="https://travis-ci.org/lake2/imdux.svg?branch=master" alt="CI Status"></a>
+<a href="https://travis-ci.org/lake2/imdux"><img src="https://travis-ci.org/lake2/imdux.svg?branch=master" alt="CI Status"></a>
 <a href="https://coveralls.io/github/lake2/imdux?branch=master"><img src="https://coveralls.io/repos/github/lake2/imdux/badge.svg?branch=master" alt="Coverage Status"></a>
 <a href="https://npmjs.com/package/imdux"><img src="https://img.shields.io/npm/v/imdux" alt="Version"></a>
 <a href="https://npmjs.com/package/imdux"><img src="https://img.shields.io/npm/dt/imdux" alt="Download"></a>
@@ -97,6 +97,8 @@ enjoy it~ 很简单，对不对？
 
 打开redux的devtool，通过点击`increase`和`decrease`button，我们可以看到状态变更的历史记录：
 
+![redux_devtool](https://user-images.githubusercontent.com/6293752/74600404-168b4d80-50cc-11ea-8a9f-c7558d5b3d8f.jpg)
+
 通过观察可以发现，`counter.increase`中的`counter`等于` createStore({ counter })`中的`counter`，而`counter.increase`中的`increase`等于`reducers`中的`increase`，也就是说，imdux会自动帮你创建redux中的action.type，你再也不需要定义字符串、写switch...case、那一套东西了。
 
 对于typescript用户，你需要在`store.ts`中带上类型：
@@ -126,6 +128,8 @@ export const { Dispatch } = store;
 ```
 
 这样你就可以很轻松地获得typescript的类型检查和代码提示：
+
+![type](https://user-images.githubusercontent.com/6293752/74600413-2acf4a80-50cc-11ea-8ce1-7fd073fbb2d8.jpg)
 
 你可以在浏览器中打开这个例子： [javascript](https://codesandbox.io/s/imdux-start-javascript-3049f?fontsize=14&hidenavigation=1&theme=dark)   [typescript](https://codesandbox.io/s/imdux-start-typescript-7wz5u?fontsize=14&hidenavigation=1&theme=dark)
 
