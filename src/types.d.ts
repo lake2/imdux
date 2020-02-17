@@ -17,18 +17,12 @@ export namespace Imdux {
         redux: Redux.Store<any, Redux.AnyAction>;
     }
 
-    export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never
-
-    type DispatherIntersection<T> = {
-        [K in keyof T]: UnionToIntersection<T[K]>
-    }
-
     export type InferActionDispath<T> = {
-        [K in keyof T]: T[K] extends (draft: any, payload: infer R) => any ? R extends (Object | null) ? (payload: R) => void : () => void : unknown
+        [K in keyof T]: T[K] extends (draft: any) => any ? () => void : T[K] extends (draft: any, payload: infer R) => any ? (payload: R) => void : unknown
     }
 
     export type InferDispatch<T> = {
-        [K in keyof T]: T[K] extends Action<any, infer R> ? DispatherIntersection<InferActionDispath<R>> : unknown
+        [K in keyof T]: T[K] extends Action<any, infer R> ? InferActionDispath<R> : unknown
     }
 
     export type InferState<T> = {

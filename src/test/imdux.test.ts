@@ -25,7 +25,7 @@ describe("imdux object state", () => {
         show(draft: State) {
             draft.show = true;
         },
-        hide(draft: State, payload: "1" | "2" | "3" | null) {
+        hide(draft: State, payload: "1" | "2" | "3" | null | undefined) {
             draft.show = false;
         },
         array(draft: State, payload: Array<number>) {
@@ -139,11 +139,11 @@ describe("imdux object state", () => {
         const home = createAction<State, Reducers>({ initialState, reducers });
         const actions = { home };
         const { Dispatch } = createStore(actions);
-
         Dispatch.home.hide("1");
         Dispatch.home.hide("2");
         Dispatch.home.hide("3");
         Dispatch.home.hide(null);
+        (a: "1" | "2" | null) => Dispatch.home.hide(a);
     });
 });
 
