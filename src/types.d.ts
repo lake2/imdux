@@ -17,8 +17,10 @@ export namespace Imdux {
         redux: Redux.Store<any, Redux.AnyAction>;
     }
 
+    export type InferActionDispathFunction<T> = T extends (...arg: infer A) => any ? A extends [any] ? () => void : T extends (draft: any, payload: infer R) => any ? (payload: R) => void : never : never;
+
     export type InferActionDispath<T> = {
-        [K in keyof T]: T[K] extends (draft: any) => any ? () => void : T[K] extends (draft: any, payload: infer R) => any ? (payload: R) => void : unknown
+        [K in keyof T]: InferActionDispathFunction<T[K]>
     }
 
     export type InferDispatch<T> = {

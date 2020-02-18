@@ -31,6 +31,9 @@ describe("imdux object state", () => {
         array(draft: State, payload: Array<number>) {
             draft.array = payload;
         },
+        optional(draft: State, payload?: number) {
+            draft.count -= 1;
+        },
     };
 
     const reducers2 = {
@@ -144,6 +147,8 @@ describe("imdux object state", () => {
         Dispatch.home.hide("3");
         Dispatch.home.hide(null);
         (a: "1" | "2" | null) => Dispatch.home.hide(a);
+        Dispatch.home.optional(1);
+        Dispatch.home.optional(undefined);
     });
 });
 
