@@ -278,7 +278,7 @@ const reducers = {
   startLoading(draft) {
     draft.isLoading = true;
   },
-  stoptLoading(draft) {
+  stopLoading(draft) {
     draft.isLoading = false;
   },
   reachEndOfList(draft) {
@@ -321,7 +321,7 @@ export default function App() {
     } catch (e) {
       alert(e.message);
     } finally {
-      Dispatch.news.stoptLoading();
+      Dispatch.news.stopLoading();
     }
   };
 
