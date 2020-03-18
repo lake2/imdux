@@ -330,11 +330,16 @@ export default function App() {
       {news.list.map(item => 
         <h1 key={item.key}>{item.title}</h1>
       )}
-      {news.isLoading ? "加载中" : ""}
+      {news.isLoading ? "加载中" : news.isEndOfList ? "加载完毕" : ""}
     </div>
   );
 }
 ```
+
+#### 基于全局函数的异步方案
+当一个异步方法需要在多个component中复用的时候，可以定义一个全局函数，在函数内使用`Dispatch`触发状态更新，使用`Query`获得状态的最新值，然后在需要的component中import这个函数即可。
+
+需要注意的是，这种方案非常简单，但是会造成全局变量污染问题，请酌情使用。
 
 ### 最佳实践
 
