@@ -243,7 +243,7 @@ imdux做的事情其实很简单，就是将redux中的reducer，和immer中的d
 1. 利用修改draft不会影响原来对象的特性，在reducer内直接读取和修改draft
 2. 利用immer中的produce函数，来生成下一个immutable状态，然后提交给redux，触发状态更新
 
-基于以上原理，imdux中的reducer必须是**同步地**。
+基于以上原理，imdux中的reducer必须是**同步的**。
 
 ### 异步请求
 
