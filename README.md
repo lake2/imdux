@@ -198,7 +198,7 @@ export const { Dispatch, Query } = store;
 Dispatch.home.setUsername("jack");
 ```
 
-你可以使用`Query`,`同步地`获取当前状态：
+你可以使用`Query`,**同步地**获取当前状态：
 
 ```typescript
 console.log(Query.home.usernmae) // jack
@@ -240,12 +240,99 @@ console.log(user3.friends[0] === user.friends[0]); // true
 
 imdux做的事情其实很简单，就是将redux中的reducer，和immer中的draft函数合二为一：
 
-1. 利用修改draft不会影响原来对象的特性，在reducer内直接修改draft
+1. 利用修改draft不会影响原来对象的特性，在reducer内直接读取和修改draft
 2. 利用immer中的produce函数，来生成下一个immutable状态，然后提交给redux，触发状态更新
+
+基于以上原理，imdux中的reducer必须是**同步地**。
 
 ### 异步请求
 
-// TODO
+imdux推荐两种异步操作解决办法：
+1. 基于hooks的异步方案
+2. 基于全局函数的异步方案
+
+#### 基于hooks的异步方案
+
+一个常见的滚动翻页代码如下：
+
+```js
+// news.action.js
+import { createAction } from "imdux";
+
+const initialState = {
+  list: [],
+  page: 0,
+  isLoading: false,
+  isEndOfList: false
+};
+
+const reducers = {
+  addNews(draft, list) {
+    draft.list.push(...list);
+  },
+  addPage(draft) {
+    if (draft.isEndOfList || draft.isLoading) return;
+    draft.page++;
+  },
+  startLoading(draft) {
+    draft.isLoading = true;
+  },
+  stoptLoading(draft) {
+    draft.isLoading = false;
+  },
+  reachEndOfList(draft) {
+    draft.isEndOfList = true;
+  }
+};
+
+export const news = createAction({ initialState, reducers });
+
+```
+
+```js
+// app.js
+import * as React from "react";
+import { useSelector } from "react-redux";
+
+import { Dispatch, Store } from "./store";
+
+export default function App() {
+  const news = useSelector(p => p.news);
+
+  React.useEffect(() => {
+    request();
+  }, [news.page]);
+
+  const request = async () => {
+    Dispatch.news.startLoading();
+    try {
+      const response = await Api.getNewsList();
+      if (!Api.isError(response)) {
+        if (response.data.list.length === 0) {
+          Dispatch.news.reachEndOfList();
+        } else {
+          Dispatch.news.addNews(response.data.list);
+        }
+      } else {
+        alert(response.message);
+      }
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      Dispatch.news.stoptLoading();
+    }
+  };
+
+  return (
+    <div onScroll={Dispatch.news.addPage}>
+      {news.list.map(item => (
+        <h1 key={item.key}>{item.title}</h1>
+      ))}
+      {news.isLoading ? "加载中" : ""}
+    </div>
+  );
+}
+```
 
 ### 最佳实践
 
