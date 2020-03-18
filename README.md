@@ -204,6 +204,45 @@ Dispatch.home.setUsername("jack");
 console.log(Query.home.usernmae) // jack
 ```
 
+### 和immer的关系
+
+immer是一个强大的immutable库，它可以非常直观、高效地创建immutable数据：
+
+```ts
+const user = {
+  name: "Jack",
+  friends: [{ name: "Tom" }, { name: "Jerry" }]
+};
+
+const user2 = produce(user, draft => {
+  draft.name = "James";
+});
+
+console.log(user2.friends === user.friends); // true
+
+const user3 = produce(user, draft => {
+  draft.friends.push({ name: "Vesper" });
+});
+
+console.log(user3.friends === user.friends);       // false
+console.log(user3.friends[0] === user.friends[0]); // true
+```
+
+他的原理如图：
+
+![immer](https://user-images.githubusercontent.com/6293752/76953831-530bcc80-694a-11ea-93ec-069d99bb67b0.gif)
+
+相对于通过扩展运算符...，Array.slice等方式来创建immutable对象，immer通过一个参数为draft的函数来修改原对象，然后将修改的过程打包生成一个新对象，原对象不变，符合人的思维直觉。
+
+详情请参考immer文档：https://immerjs.github.io/immer/docs/introduction
+
+其实，从名字你就可以看出端倪：imdux = im + dux = immer + redux
+
+imdux做的事情其实很简单，就是将redux中的reducer，和immer中的draft函数合二为一：
+
+1. 利用修改draft不会影响原来对象的特性，在reducer内直接修改draft
+2. 利用immer中的produce函数，来生成下一个immutable状态，然后提交给redux，触发状态更新
+
 ### 异步请求
 
 // TODO
