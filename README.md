@@ -257,6 +257,7 @@ imdux推荐两种异步操作解决办法：
 
 ```js
 // 定义一个名称为news的action，并使用createStore初始化
+
 import { createAction } from "imdux";
 
 const initialState = {
@@ -291,6 +292,7 @@ export const news = createAction({ initialState, reducers });
 
 ```js
 // 使用Dispatch.news.addPage更新news.page，触发request异步操作
+
 import * as React from "react";
 import { useSelector } from "react-redux";
 
@@ -325,9 +327,9 @@ export default function App() {
 
   return (
     <div onScroll={Dispatch.news.addPage}>
-      {news.list.map(item => (
+      {news.list.map(item => 
         <h1 key={item.key}>{item.title}</h1>
-      ))}
+      )}
       {news.isLoading ? "加载中" : ""}
     </div>
   );
