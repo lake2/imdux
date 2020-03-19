@@ -304,13 +304,13 @@ export default function App() {
   const news = useSelector(p => p.news);
 
   React.useEffect(() => {
-    request();
+    request(news.page);
   }, [news.page]);
 
-  const request = async () => {
+  const request = async (page) => {
     Dispatch.news.startLoading();
     try {
-      const response = await Api.getNewsList(news.page);
+      const response = await Api.getNewsList(page);
       if (!Api.isError(response)) {
         if (response.data.list.length === 0) {
           Dispatch.news.reachEndOfList();
