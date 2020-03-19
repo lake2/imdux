@@ -209,6 +209,8 @@ console.log(Query.home.usernmae) // jack
 immer是一个强大的immutable库，它可以非常直观、高效地创建immutable数据：
 
 ```ts
+import produce from "immer";
+
 const user = {
   name: "Jack",
   friends: [{ name: "Tom" }, { name: "Jerry" }]
