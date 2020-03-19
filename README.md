@@ -310,7 +310,7 @@ export default function App() {
   const request = async () => {
     Dispatch.news.startLoading();
     try {
-      const response = await Api.getNewsList();
+      const response = await Api.getNewsList(news.page);
       if (!Api.isError(response)) {
         if (response.data.list.length === 0) {
           Dispatch.news.reachEndOfList();
