@@ -209,6 +209,8 @@ console.log(Query.home.usernmae) // jack
 immer是一个强大的immutable库，它可以非常直观、高效地创建immutable数据：
 
 ```ts
+import produce from "immer";
+
 const user = {
   name: "Jack",
   friends: [{ name: "Tom" }, { name: "Jerry" }]
@@ -243,7 +245,7 @@ imdux做的事情其实很简单，就是将redux中的reducer，和immer中的d
 1. 利用修改draft不会影响原来对象的特性，在reducer内直接读取和修改draft
 2. 利用immer中的produce函数，来生成下一个immutable状态，然后提交给redux，触发状态更新
 
-基于以上原理，imdux中的reducer必须是**同步地**。
+基于以上原理，imdux中的reducer必须是**同步的**。
 
 ### 异步请求
 
@@ -302,13 +304,13 @@ export default function App() {
   const news = useSelector(p => p.news);
 
   React.useEffect(() => {
-    request();
+    request(news.page);
   }, [news.page]);
 
-  const request = async () => {
+  const request = async (page) => {
     Dispatch.news.startLoading();
     try {
-      const response = await Api.getNewsList();
+      const response = await Api.getNewsList(page);
       if (!Api.isError(response)) {
         if (response.data.list.length === 0) {
           Dispatch.news.reachEndOfList();
