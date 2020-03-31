@@ -40,7 +40,6 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
                         throw new Error(notInitialized);
                     } else {
                         if (!isPlainObject(payload) && !isPrimitiveType(payload) && !Array.isArray(payload)) {
-                            payload = undefined;
                             this.options.payloadNotValidWarn && console.warn(payloadNotValid);
                         }
                         this.redux.dispatch({ type: `${this.name}.${name}`, payload });
