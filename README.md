@@ -198,15 +198,148 @@ export const { Dispatch, Query } = store;
 Dispatch.home.setUsername("jack");
 ```
 
-你可以使用`Query`,`同步地`获取当前状态：
+你可以使用`Query`,**同步地**获取当前状态：
 
 ```typescript
 console.log(Query.home.usernmae) // jack
 ```
 
+### 和immer的关系
+
+immer是一个强大的immutable库，它可以非常直观、高效地创建immutable数据：
+
+```ts
+const user = {
+  name: "Jack",
+  friends: [{ name: "Tom" }, { name: "Jerry" }]
+};
+
+const user2 = produce(user, draft => {
+  draft.name = "James";
+});
+
+console.log(user2.friends === user.friends); // true
+
+const user3 = produce(user, draft => {
+  draft.friends.push({ name: "Vesper" });
+});
+
+console.log(user3.friends === user.friends);       // false
+console.log(user3.friends[0] === user.friends[0]); // true
+```
+
+他的原理如图：
+
+![immer](https://user-images.githubusercontent.com/6293752/76953831-530bcc80-694a-11ea-93ec-069d99bb67b0.gif)
+
+相对于通过扩展运算符...，Array.slice等方式来创建immutable对象，immer通过一个参数为draft的函数来修改原对象，然后将修改的过程打包生成一个新对象，原对象不变，符合人的思维直觉。
+
+详情请参考immer文档：https://immerjs.github.io/immer/docs/introduction
+
+其实，从名字你就可以看出端倪：imdux = im + dux = immer + redux
+
+imdux做的事情其实很简单，就是将redux中的reducer，和immer中的draft函数合二为一：
+
+1. 利用修改draft不会影响原来对象的特性，在reducer内直接读取和修改draft
+2. 利用immer中的produce函数，来生成下一个immutable状态，然后提交给redux，触发状态更新
+
+基于以上原理，imdux中的reducer必须是**同步地**。
+
 ### 异步请求
 
-// TODO
+imdux推荐两种异步操作解决办法：
+1. 基于hooks的异步方案
+2. 基于全局函数的异步方案
+
+#### 基于hooks的异步方案
+
+一个常见的滚动翻页代码如下：
+
+```js
+// 定义一个名称为news的action，并使用createStore初始化
+
+import { createAction } from "imdux";
+
+const initialState = {
+  list: [],
+  page: 0,
+  isLoading: false,
+  isEndOfList: false
+};
+
+const reducers = {
+  addNews(draft, list) {
+    draft.list.push(...list);
+  },
+  addPage(draft) {
+    if (draft.isEndOfList || draft.isLoading) return;
+    draft.page++;
+  },
+  startLoading(draft) {
+    draft.isLoading = true;
+  },
+  stopLoading(draft) {
+    draft.isLoading = false;
+  },
+  reachEndOfList(draft) {
+    draft.isEndOfList = true;
+  }
+};
+
+export const news = createAction({ initialState, reducers });
+
+```
+
+```js
+// 使用Dispatch.news.addPage更新news.page，触发request异步操作
+
+import * as React from "react";
+import { useSelector } from "react-redux";
+
+import { Dispatch, Store } from "./store";
+
+export default function App() {
+  const news = useSelector(p => p.news);
+
+  React.useEffect(() => {
+    request();
+  }, [news.page]);
+
+  const request = async () => {
+    Dispatch.news.startLoading();
+    try {
+      const response = await Api.getNewsList();
+      if (!Api.isError(response)) {
+        if (response.data.list.length === 0) {
+          Dispatch.news.reachEndOfList();
+        } else {
+          Dispatch.news.addNews(response.data.list);
+        }
+      } else {
+        alert(response.message);
+      }
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      Dispatch.news.stopLoading();
+    }
+  };
+
+  return (
+    <div onScroll={Dispatch.news.addPage}>
+      {news.list.map(item => 
+        <h1 key={item.key}>{item.title}</h1>
+      )}
+      {news.isLoading ? "加载中" : news.isEndOfList ? "加载完毕" : ""}
+    </div>
+  );
+}
+```
+
+#### 基于全局函数的异步方案
+当一个异步方法需要在多个component中复用的时候，可以定义一个全局函数，在函数内使用`Dispatch`触发状态更新，使用`Query`获得状态的最新值，然后在需要的component中import这个函数即可。
+
+需要注意的是，这种方案非常简单，但是会造成全局变量污染问题，请酌情使用。
 
 ### 最佳实践
 
