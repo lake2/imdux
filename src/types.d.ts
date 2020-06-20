@@ -20,7 +20,7 @@ export namespace Imdux {
     export type InferActionDispathFunction<T> = T extends (...arg: infer A) => any ? A extends [any] ? () => void : T extends (draft: any, payload: infer R) => any ? (payload: R) => void : never : never;
 
     export type InferActionDispath<T> = {
-        [K in keyof T]: InferActionDispathFunction<T[K]>
+        [K in keyof T]: T[K] extends (...arg: any) => any ? InferActionDispathFunction<T[K]> : InferActionDispath<T[K]>
     }
 
     export type InferDispatch<T> = {
@@ -31,11 +31,15 @@ export namespace Imdux {
         [K in keyof T]: T[K] extends Action<infer S, any> ? S : unknown
     }
 
+    export type Draft = (draft: T, payload: any) => T | void;
+
+    export interface Reducers {
+        [key: string]: Draft | Reducers,
+    }
+
     export interface CreateActionParams<T> {
         initialState: T,
-        reducers: {
-            [key: string]: (draft: T, payload: any) => T | void,
-        }
+        reducers: Reducers
     }
 
     export interface createStoreOptions {

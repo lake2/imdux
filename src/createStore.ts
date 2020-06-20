@@ -29,7 +29,7 @@ export function createStore<T extends Imdux.Actions>(actions: T, opt?: Partial<I
                 const action = actions[name] as any;
                 action.options = options;
                 action.redux = this.redux;
-                action.name = name;
+                action.namespace = name;
                 this.Dispatch[name] = actions[name].dispatch;
                 Object.defineProperty(this.Query, name, {
                     get() {

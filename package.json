@@ -1,6 +1,6 @@
 {
     "name": "imdux",
-    "version": "0.1.8",
+    "version": "0.2.0",
     "description": "A redux helper for react & hooks & typescript developers.",
     "main": "dist/imdux.js",
     "types": "src/types.d.ts",
