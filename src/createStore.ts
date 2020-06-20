@@ -22,7 +22,7 @@ export function createStore<T extends Imdux.Actions>(actions: T, opt?: Partial<I
             const rootReducer = Redux.combineReducers(reducers);
             this.redux = Redux.createStore(
                 rootReducer,
-                options?.devtool ? (window as any).__REDUX_DEVTOOLS_EXTENSION__?.({ trace: true }) : undefined
+                options?.devtool ? (window as any).__REDUX_DEVTOOLS_EXTENSION__?.({ trace: true, name: options.name }) : undefined
             );
 
             Object.keys(actions).forEach(name => {

@@ -41,6 +41,7 @@ export namespace Imdux {
     export interface createStoreOptions {
         devtool: boolean                  // false
         payloadNotValidWarn: boolean      // true
+        name?: string
     }
 }
 
