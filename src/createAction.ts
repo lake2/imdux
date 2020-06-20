@@ -19,14 +19,14 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
             this.dispatch = {};
             this.reducers = {};
             this.reducer = (state: any, action: any) => {
-                const split: Array<string> = action.type.split(".");
+                const split: Array<string> = action.type.split("/");
                 const name = split[0];
-                const type = split[1];
+                const type = split.slice(1).join("/");
                 if (state === undefined) {
                     return params.initialState;
                 } else if (name !== this.name) {
                     return state;
-                } else if (split.length === 2 && this.reducers[type]) {
+                } else if (split.length >= 2 && this.reducers[type]) {
                     return this.reducers[type](state, action.payload);
                 } else {
                     return state;
@@ -42,7 +42,7 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
                         if (!isPlainObject(payload) && !isPrimitiveType(payload) && !Array.isArray(payload)) {
                             this.options.payloadNotValidWarn && console.warn(payloadNotValid);
                         }
-                        this.redux.dispatch({ type: `${this.name}.${name}`, payload });
+                        this.redux.dispatch({ type: `${this.name}/${name}`, payload });
                     }
                 };
             });
