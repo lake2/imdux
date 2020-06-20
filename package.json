@@ -1,6 +1,6 @@
 {
     "name": "imdux",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "A redux helper for react & hooks & typescript developers.",
     "main": "dist/imdux.js",
     "types": "src/types.d.ts",
@@ -9,7 +9,7 @@
         "cover": "jest --coverage --coverageReporters=text-lcov | coveralls",
         "dev": "webpack-dev-server --config webpack.dev.config",
         "pack": "webpack --config webpack.dist.config",
-        "publish": "npm publish --registry http://registry.npmjs.org",
+        "pub": "npm publish --registry http://registry.npmjs.org",
         "lint": "node_modules/.bin/tslint -p tsconfig.json --fix"
     },
     "files": [
