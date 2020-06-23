@@ -31,7 +31,7 @@ export namespace Imdux {
         [K in keyof T]: T[K] extends Action<infer S, any> ? S : unknown
     }
 
-    export type Draft = (draft: T, payload: any) => T | void;
+    export type Draft<T = any> = (draft: T, payload: any) => T | void;
 
     export interface Reducers {
         [key: string]: Draft | Reducers,
