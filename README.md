@@ -180,7 +180,7 @@ export function App() {
 }
 ```
 
-![redux_devtool](https://user-images.githubusercontent.com/6293752/86555250-70f54f80-bf82-11ea-8919-381308e32c44.gif)
+![redux_devtool](https://user-images.githubusercontent.com/6293752/86555496-1ad4dc00-bf83-11ea-8622-f74d7dda75f3.gif)
 
 命名空间是可以多级嵌套，应当根据项目情况自由组织，推荐把相关的状态变更放在一个命名空间下。
 
