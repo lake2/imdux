@@ -31,7 +31,7 @@ npx create-react-app imdux-demo
 yarn add imdux immer redux react-redux
 ```
 
-创建一个简单的项目目录：
+创建一个简单的项目结构：
 
 ```js
 ├── package.json
@@ -125,7 +125,7 @@ enjoy it~ 很简单，对不对？
 
 打开redux的devtool，通过点击`increase`和`decrease`button，我们可以看到状态变更的历史记录：
 
-![redux_devtool](https://user-images.githubusercontent.com/6293752/86548333-94ae9a80-bf6e-11ea-942d-a85f02f7a0b3.gif)
+![redux_devtool](https://user-images.githubusercontent.com/6293752/86553981-e9f2a800-bf7e-11ea-97d4-3511ea30a37a.gif)
 
 ### 命名空间
 
@@ -180,13 +180,13 @@ export function App() {
 }
 ```
 
-![redux_devtool](https://user-images.githubusercontent.com/6293752/86549485-56b37580-bf72-11ea-950f-ef08313d42ea.gif)
+![redux_devtool](https://user-images.githubusercontent.com/6293752/86555250-70f54f80-bf82-11ea-8919-381308e32c44.gif)
 
-命名空间是可以多级嵌套，可以根据项目情况自由组织，推荐把相关的状态变更放在一个命名空间下。
+命名空间是可以多级嵌套，应当根据项目情况自由组织，推荐把相关的状态变更放在一个命名空间下。
 
 ### getState()
 
-在redux中，某些情况下需要`同步`获得状态的最新值，[redux提供了getState()接口来实现这个需求](https://redux.js.org/basics/store)。
+在redux中，某些情况下需要`同步`获得状态的最新值，[redux提供了getState()接口来实现](https://redux.js.org/basics/store)。
 
 在imdux中，`createStore`导出的`Query`内置了getter，可以达到和`getState()`一样的效果。
 
@@ -209,9 +209,7 @@ console.log(store.redux.getState().counter === Query.counter); // true
 
 ### Typescript
 
-在redux中实现100%的类型检查是imdux的初衷。
-
-对于typescript用户，推荐在`counter.reducers.ts`中带上类型：
+在redux中实现100%的类型检查是imdux的初衷。对于typescript用户，推荐在`counter.reducers.ts`中带上类型：
 
 ```ts
 import { createAction } from "imdux";
