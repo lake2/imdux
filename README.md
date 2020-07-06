@@ -28,33 +28,59 @@ npx create-react-app imdux-demo
 安装imdux，imdux依赖于 immer，redux，react-redux ：
 
 ```shell
-npm install imdux immer redux react-redux --save
+yarn add imdux immer redux react-redux
 ```
 
-在`src`目录下创建文件`store.js`，输入代码：
+创建一个简单的项目目录：
 
 ```js
-import { createAction, createStore } from "imdux";
+├── package.json
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   └── robots.txt
+├── src
+│   ├── App.js
+│   ├── index.js
+│   └── store
+│       ├── counter.reducers.js
+│       └── index.js
+└── yarn.lock
+```
+
+打开`src/store/counter.reducers.js`，输入代码：
+
+```js
+import { createAction } from "imdux";
 
 const initialState = {
-  value: 0
+    value: 0
 };
 
 const reducers = {
-  increase(draft, payload) {
-    draft.value += payload;
-  },
-  decrease(draft, payload) {
-    draft.value -= payload;
-  }
+    increase(draft, payload) {
+        draft.value += payload;
+    },
+    decrease(draft, payload) {
+        draft.value -= payload;
+    }
 };
 
-const counter = createAction({ initialState, reducers });
-export const store = createStore({ counter }, { devtool: true });
-export const { Dispatch } = store;
+export const counter = createAction({ initialState, reducers });
 ```
 
-打开`src/App.js`，输入代码：
+打开`src/store/index.js`，创建一个store：
+
+```js
+import { createStore } from "imdux";
+
+import { counter } from "./counter.reducers";
+
+export const store = createStore({ counter }, { devtool: true });
+export const { Dispatch, Query } = store;
+```
+
+打开`src/App.js`，创建一个`App`：
 
 ```js
 import React from "react";
@@ -62,147 +88,179 @@ import { useSelector } from "react-redux";
 
 import { Dispatch } from "./store";
 
-export default function App() {
-  const value = useSelector(store => store.counter.value);
-  return (
-    <div>
-      <h1>{value}</h1>
-      <button onClick={() => Dispatch.counter.increase(1)}>increase</button>
-      <button onClick={() => Dispatch.counter.decrease(1)}>decrease</button>
-    </div>
-  );
+export function App() {
+    // 取出counter中的值，如果这个值改变，那么组件会自动更新
+    const value = useSelector(store => store.counter.value);
+    return (
+        <div style={{ padding: 20 }}>
+            <h1>{value}</h1>
+            <button onClick={() => Dispatch.counter.increase(1)}>increase</button> {/* 通过Dispatch触发状态更新 */}
+            <button onClick={() => Dispatch.counter.decrease(1)}>decrease</button>
+        </div>
+    );
 }
 ```
 
-打开`src/index.js`，注入redux的store：
+最后，打开`src/index.js`，注入redux的store：
 
 ```js
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
-import App from "./App";
+import { App } from "./App";
 import { store } from "./store";
 
-const rootElement = document.getElementById("root");
 ReactDOM.render(
-  <Provider store={store.redux}>
-    <App />
-  </Provider>,
-  rootElement
+    <Provider store={store.redux}>  {/* 注入 */}
+        <App />
+    </Provider>,
+    document.getElementById("root")
 );
 ```
 
 enjoy it~ 很简单，对不对？
 
+你可以在浏览器中打开这个例子： [javascript](https://codesandbox.io/s/imdux-start-javascript-3049f?fontsize=14&hidenavigation=1&theme=dark)   [typescript](https://codesandbox.io/s/imdux-start-typescript-7wz5u?fontsize=14&hidenavigation=1&theme=dark)
+
 打开redux的devtool，通过点击`increase`和`decrease`button，我们可以看到状态变更的历史记录：
 
-![redux_devtool](https://user-images.githubusercontent.com/6293752/74600404-168b4d80-50cc-11ea-8a9f-c7558d5b3d8f.jpg)
+![redux_devtool](https://user-images.githubusercontent.com/6293752/86548333-94ae9a80-bf6e-11ea-942d-a85f02f7a0b3.gif)
 
-通过观察可以发现，`counter.increase`中的`counter`等于` createStore({ counter })`中的`counter`，而`counter.increase`中的`increase`等于`reducers`中的`increase`，也就是说，imdux会自动帮你创建redux中的action.type，你再也不需要定义字符串、写switch...case、那一套东西了。
+### 命名空间
 
-对于typescript用户，你需要在`store.ts`中带上类型：
+上面的例子中，如果有多个counter，可以在`reducers`中用命名空间隔离：
+
+```js
+import { createAction } from "imdux";
+
+const initialState = {
+    first: 0,
+    last: 0,
+};
+
+const reducers = {
+    first: {
+        increase(draft, payload) {
+            draft.first += payload;
+        },
+        decrease(draft, payload) {
+            draft.first -= payload;
+        }
+    },
+    last: {
+        increase(draft, payload) {
+            draft.last += payload;
+        },
+        decrease(draft, payload) {
+            draft.last -= payload;
+        }
+    }
+};
+
+export const counter = createAction({ initialState, reducers });
+
+```
+
+```js
+export function App() {
+    const first = useSelector(store => store.counter.first);
+    const last = useSelector(store => store.counter.last);
+    return (
+        <div style={{ padding: 20 }}>
+            <h1>{first}</h1>
+            <button onClick={() => Dispatch.counter.first.increase(1)}>increase</button>
+            <button onClick={() => Dispatch.counter.first.decrease(1)}>decrease</button>
+
+            <h1>{last}</h1>
+            <button onClick={() => Dispatch.counter.last.increase(1)}>increase</button>
+            <button onClick={() => Dispatch.counter.last.decrease(1)}>decrease</button>
+        </div>
+    );
+}
+```
+
+![redux_devtool](https://user-images.githubusercontent.com/6293752/86549485-56b37580-bf72-11ea-950f-ef08313d42ea.gif)
+
+命名空间是可以多级嵌套，可以根据项目情况自由组织，推荐把相关的状态变更放在一个命名空间下。
+
+### getState()
+
+在redux中，某些情况下需要`同步`获得状态的最新值，[redux提供了getState()接口来实现这个需求](https://redux.js.org/basics/store)。
+
+在imdux中，`createStore`导出的`Query`内置了getter，可以达到和`getState()`一样的效果。
+
+例如：
+
+```js
+import { createStore } from "imdux";
+
+import { counter } from "./counter.reducers";
+
+export const store = createStore({ counter }, { devtool: true });
+export const { Dispatch, Query } = store;
+
+console.log(store.redux.getState().counter); // { value: 0 }
+console.log(Query.counter);                  // { value: 0 }
+
+console.log(store.redux.getState().counter === Query.counter); // true
+
+```
+
+### Typescript
+
+在redux中实现100%的类型检查是imdux的初衷。
+
+对于typescript用户，推荐在`counter.reducers.ts`中带上类型：
 
 ```ts
-import { createAction, createStore } from "imdux";
+import { createAction } from "imdux";
 
 type State = typeof initialState; // 获得类型
 type Reducers = typeof reducers;  // 获得类型
 
 const initialState = {
-  value: 0
+    value: 0
 };
 
 const reducers = {
-  increase(draft: State, payload: number) { // draft的类型为State
-    draft.value += payload;
-  },
-  decrease(draft: State, payload: number) { // draft的类型为State
-    draft.value -= payload;
-  }
+    increase(draft: State, payload: number) { // draft的类型为State
+        draft.value += payload;
+    },
+    decrease(draft: State, payload: number) { // draft的类型为State
+        draft.value -= payload;
+    }
 };
 
-const counter = createAction<State, Reducers>({ initialState, reducers }); // 注入类型
-export const store = createStore({ counter }, { devtool: true });
-export const { Dispatch } = store;
+export const counter = createAction<State, Reducers>({ initialState, reducers }); // 注入类型
 ```
 
-这样你就可以很轻松地获得typescript的类型检查和代码提示：
+在`src/store/index.ts`中，导出`Query`的类型，改写`useSelector`的函数定义：
 
-![type](https://user-images.githubusercontent.com/6293752/74600413-2acf4a80-50cc-11ea-8ce1-7fd073fbb2d8.jpg)
+```ts
+import { createStore } from "imdux";
+import { useSelector as useReduxSelector } from "react-redux";
+
+import { counter } from "./counter.reducers";
+
+export const store = createStore({ counter }, { devtool: true });
+export const { Dispatch, Query } = store;
+
+export type Store = typeof Query;
+
+export function useSelector<TSelected>(
+    selector: (state: Store) => TSelected,
+    equalityFn?: (left: TSelected, right: TSelected) => boolean
+) {
+    return useReduxSelector<Store, TSelected>(selector, equalityFn);
+}
+```
+
+在`src/App.tsx`中，使用改写后的`useSelector`，这样就可以很轻松地获得typescript的类型检查和代码提示：
+
+![type](https://user-images.githubusercontent.com/6293752/86553310-f6760100-bf7c-11ea-8f7b-096a80656c4c.gif)
 
 你可以在浏览器中打开这个例子： [javascript](https://codesandbox.io/s/imdux-start-javascript-3049f?fontsize=14&hidenavigation=1&theme=dark)   [typescript](https://codesandbox.io/s/imdux-start-typescript-7wz5u?fontsize=14&hidenavigation=1&theme=dark)
-
-
-### Imdux API
-
-- [createAction](https://github.com/lake2/imdux#createAction)
-
-- [createStore](https://github.com/lake2/imdux#createStore)
-
-#### createAction
-
-imdux中的action由两部组成：`initialState`和`reducers`。
-
-通常react项目可以切割为很多小的页面或者模块。当一个页面或者模块的state需要全局管理时，你就可以为这个页面或者模块创建一个`Action`，并为这个`Action`起一个名字。例如，你有一个名称为`home`的`Action`，`home.usename`需要全局管理：
-
-```js
-const initialState = { usernmae: "" }
-```
-
-```js
-const reducers = {
-  setUsername(draft, payload) {
-    draft.usernmae = payload;
-  },
-};
-```
-
-```js
-const home = createAction({ initialState, reducers });
-```
-
-一个`Action`就创建好了。
-
-对于typescript用户，你需要增加类型信息并注入：
-
-```ts
-type State = typeof initialState; // 获得类型
-type Reducers = typeof reducers;  // 获得类型
-
-const home = createAction<State, Reducers>({ initialState, reducers }); // 注入类型
-```
-
-同时，给每一个reducer函数带上类型信息，以便在reducer内获得类型提示，这也是Dispatch函数参数类型检查的关键所在：
-
-```ts
-const reducers = {
-  setUsername(draft:State, payload:string) {
-    draft.usernmae = payload;
-  },
-};
-```
-
-####  createStore
-
-创建好名称为`home`的`Action`后，你需要使用`createStore`把这个action初始化，同时将`Dispatch`和`Query`导出：
-
-```ts
-export const store = createStore({ home }, { devtool: true });
-export const { Dispatch, Query } = store;
-```
-
-接下来，你就可以使用`Dispatch`触发一个状态变化，更新页面：
-
-```ts
-Dispatch.home.setUsername("jack");
-```
-
-你可以使用`Query`,**同步地**获取当前状态：
-
-```typescript
-console.log(Query.home.usernmae) // jack
-```
 
 ### 和immer的关系
 
