@@ -48,6 +48,7 @@ yarn add imdux immer redux react-redux
 └── yarn.lock
 ```
 
+
 打开`src/store/counter.reducers.js`，输入代码：
 
 ```js
@@ -69,6 +70,7 @@ const reducers = {
 export const counter = createAction({ initialState, reducers });
 ```
 
+
 打开`src/store/index.js`，创建一个store：
 
 ```js
@@ -79,6 +81,7 @@ import { counter } from "./counter.reducers";
 export const store = createStore({ counter }, { devtool: true });
 export const { Dispatch, Query } = store;
 ```
+
 
 打开`src/App.js`，创建一个`App`：
 
@@ -100,6 +103,7 @@ export function App() {
     );
 }
 ```
+
 
 最后，打开`src/index.js`，注入redux的store：
 
