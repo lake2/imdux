@@ -51,6 +51,7 @@ yarn add imdux immer redux react-redux
 
 打开`src/store/counter.reducers.js`，输入代码：
 
+
 ```js
 import { createAction } from "imdux";
 
@@ -73,6 +74,7 @@ export const counter = createAction({ initialState, reducers });
 
 打开`src/store/index.js`，创建一个store：
 
+
 ```js
 import { createStore } from "imdux";
 
@@ -84,6 +86,7 @@ export const { Dispatch, Query } = store;
 
 
 打开`src/App.js`，创建一个`App`：
+
 
 ```js
 import React from "react";
@@ -106,6 +109,7 @@ export function App() {
 
 
 最后，打开`src/index.js`，注入redux的store：
+
 
 ```js
 import React from "react";
