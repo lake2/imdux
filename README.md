@@ -260,6 +260,11 @@ export function useSelector<TSelected>(
 
 你可以在浏览器中打开这个例子： [javascript](https://codesandbox.io/s/imdux-start-javascript-3049f?fontsize=14&hidenavigation=1&theme=dark)   [typescript](https://codesandbox.io/s/imdux-start-typescript-7wz5u?fontsize=14&hidenavigation=1&theme=dark)
 
+按住`ctrl`键，鼠标左键点击`increase`，可以准确跳转到`increase reducer`：
+
+![navigate](https://user-images.githubusercontent.com/6293752/87135651-ea67a780-c2cc-11ea-8dbe-bb66a42bf4d7.gif)
+
+
 ### 和immer的关系
 
 immer是一个强大的immutable库，它可以非常直观、高效地创建immutable数据：
