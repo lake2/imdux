@@ -1,10 +1,10 @@
-import * as Redux from "redux";
+import * as Redux from 'redux';
 
-import { Imdux } from "./types";
-import { wrongModify } from "./error";
+import { Imdux } from './types';
+import { wrongModify } from './error';
 
 export function createStore<T extends Imdux.Modules>(modules: T, opt?: Partial<Imdux.createStoreOptions>): Imdux.Store<T> {
-    return new class Store<T> implements Imdux.Store<T> {
+    return new (class Store<T> implements Imdux.Store<T> {
         Dispatch: any;
         Query: any;
         redux: Redux.Store<any, Redux.AnyAction>;
@@ -22,13 +22,13 @@ export function createStore<T extends Imdux.Modules>(modules: T, opt?: Partial<I
             const rootReducer = Redux.combineReducers(reducers);
             const middleware = (store: any) => (next: any) => (action: any) => {
                 next({ ...action, rootState: store.getState() });
-            }
+            };
             this.redux = Redux.createStore(
                 rootReducer,
                 Redux.compose(
                     Redux.applyMiddleware(middleware),
-                    options?.devtool ? (window as any).__REDUX_DEVTOOLS_EXTENSION__?.({ trace: true, name: options.name }) : (x: any) => x
-                )
+                    options?.devtool ? (window as any).__REDUX_DEVTOOLS_EXTENSION__?.({ trace: true, name: options.name }) : (x: any) => x,
+                ),
             );
 
             Object.keys(modules).forEach(name => {
@@ -47,6 +47,5 @@ export function createStore<T extends Imdux.Modules>(modules: T, opt?: Partial<I
                 });
             });
         }
-    }();
+    })();
 }
-

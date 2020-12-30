@@ -1,8 +1,6 @@
 {
     "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
+    "extends": ["tslint:recommended"],
     "jsRules": {},
     "rules": {
         "eofline": true,
@@ -22,11 +20,7 @@
         "no-bitwise": false,
         "radix": false,
         "no-empty": false,
-        "no-unused-expression": [
-            true,
-            "allow-fast-null-checks",
-            "allow-new"
-        ],
+        "no-unused-expression": [true, "allow-fast-null-checks", "allow-new"],
         "ordered-imports": [
             true,
             {
@@ -52,19 +46,9 @@
                 "named-imports-order": "lowercase-first"
             }
         ],
-        "arrow-parens": [
-            true,
-            "ban-single-arg-parens"
-        ],
-        "semicolon": [
-            true,
-            "ignore-interfaces"
-        ],
-        "indent": [
-            true,
-            "spaces",
-            4
-        ],
+        "arrow-parens": [true, "ban-single-arg-parens"],
+        "semicolon": [true, "ignore-interfaces"],
+        "indent": [true, "spaces", 4],
         "trailing-comma": [
             true,
             {
@@ -77,10 +61,7 @@
                 "esSpecCompliant": true
             }
         ],
-        "array-type": [
-            true,
-            "generic"
-        ]
+        "array-type": [true, "generic"]
     },
     "rulesDirectory": []
 }

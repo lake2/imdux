@@ -1,13 +1,13 @@
-import * as Redux from "redux";
-import produce from "immer";
-import isPrimitiveType from "is-primitive";
-import isPlainObject from "is-plain-object";
+import * as Redux from 'redux';
+import produce from 'immer';
+import isPrimitiveType from 'is-primitive';
+import isPlainObject from 'is-plain-object';
 
-import { notInitialized, payloadNotValid, wrongModify } from "./error";
-import { Imdux } from "./types";
+import { notInitialized, payloadNotValid, wrongModify } from './error';
+import { Imdux } from './types';
 
 export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.Module<S, R> {
-    return new class Module<S, R> implements Imdux.Module<S, R>{
+    return new (class Module<S, R> implements Imdux.Module<S, R> {
         namespace: string;
         redux: Redux.Store<any, Redux.AnyAction>;
         dispatch: any;
@@ -19,9 +19,9 @@ export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.M
             this.dispatch = {};
             this.reducers = {};
             this.reducer = (state: any, action: any) => {
-                const split: Array<string> = action.type.split("/");
+                const split: Array<string> = action.type.split('/');
                 const namespace = split[0];
-                const type = "/" + split.slice(1).join("/");
+                const type = '/' + split.slice(1).join('/');
                 if (state === undefined) {
                     return params.initialState;
                 } else if (namespace !== this.namespace) {
@@ -36,8 +36,8 @@ export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.M
             const init = (map: Imdux.Reducers, namespace: string, dispatch: any) => {
                 Object.keys(map).forEach(name => {
                     let reducer: any;
-                    let path = namespace + "/" + name;
-                    if (typeof map[name] === "function") {
+                    let path = namespace + '/' + name;
+                    if (typeof map[name] === 'function') {
                         reducer = map[name];
                         this.reducers[path] = (state: any, action: any) => produce(state, (draft: any) => reducer(draft, action.payload));
                         dispatch[name] = (payload: any) => {
@@ -51,13 +51,15 @@ export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.M
                             }
                         };
                     } else {
-                        if (!dispatch[name]) { dispatch[name] = {} };
+                        if (!dispatch[name]) {
+                            dispatch[name] = {};
+                        }
                         init(map[name] as any, path, dispatch[name]);
                     }
                 });
-            }
+            };
 
-            init(params.reducers, "", this.dispatch);
+            init(params.reducers, '', this.dispatch);
         }
 
         get query() {
@@ -71,5 +73,5 @@ export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.M
         set query(value: any) {
             throw new Error(wrongModify);
         }
-    }();
+    })();
 }
