@@ -1,3 +1,3 @@
 declare module 'is-primitive' {
-    export default function isPrimitiveType(params: any): boolean;
+    export function isPrimitive(params: any): boolean;
 }

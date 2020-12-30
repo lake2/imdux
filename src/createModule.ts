@@ -1,6 +1,6 @@
 import * as Redux from 'redux';
 import produce from 'immer';
-import isPrimitiveType from 'is-primitive';
+import { isPrimitive } from './isPrimitive';
 import isPlainObject from 'is-plain-object';
 
 import { notInitialized, payloadNotValid, wrongModify } from './error';
@@ -44,7 +44,7 @@ export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.M
                             if (!this.redux) {
                                 throw new Error(notInitialized);
                             } else {
-                                if (!isPlainObject(payload) && !isPrimitiveType(payload) && !Array.isArray(payload)) {
+                                if (!isPlainObject(payload) && !isPrimitive(payload) && !Array.isArray(payload)) {
                                     this.options.payloadNotValidWarn && console.warn(payloadNotValid);
                                 }
                                 this.redux.dispatch({ type: this.namespace + path, payload });

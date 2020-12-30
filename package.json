@@ -11,7 +11,7 @@
         "dev": "webpack-dev-server --config webpack.dev.config",
         "pack": "webpack --config webpack.dist.config",
         "pub": "npm publish --registry http://registry.npmjs.org",
-        "lint": "node_modules/.bin/tslint -p tsconfig.json --fix",
+        "lint": "npx tslnt -p tsconfig.json --fix",
         "prettier": "prettier --write ."
     },
     "files": [
@@ -39,7 +39,6 @@
     "dependencies": {
         "immer": "^5.3.6",
         "is-plain-object": "^3.0.0",
-        "is-primitive": "^3.0.1",
         "redux": "^4.0.5"
     },
     "devDependencies": {
