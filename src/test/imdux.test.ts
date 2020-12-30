@@ -1,4 +1,4 @@
-import { createAction, createStore } from "../";
+import { createModule, createStore } from "../";
 // import { Imdux } from "../types";
 
 describe("imdux object state", () => {
@@ -43,9 +43,9 @@ describe("imdux object state", () => {
     };
 
     it("createStore", () => {
-        const home = createAction<State, Reducers>({ initialState, reducers });
-        const actions = { home };
-        const { Dispatch, Query, redux } = createStore(actions);
+        const home = createModule<State, Reducers>({ initialState, reducers });
+        const modules = { home };
+        const { Dispatch, Query, redux } = createStore(modules);
         expect(Query.home.name).toBe("");
         expect(Query.home.count).toBe(1);
 
@@ -75,9 +75,9 @@ describe("imdux object state", () => {
         expect(() => { Query.home.count = 0; }).toThrowError("Cannot assign");
         expect(() => { Query.home.name = ""; }).toThrowError("Cannot assign");
 
-        const home2 = createAction<State, Reducers>({ initialState, reducers: reducers2 });
-        const actions2 = { home, home2 };
-        const { Dispatch: Dispatch2, Query: Query2 } = createStore(actions2);
+        const home2 = createModule<State, Reducers>({ initialState, reducers: reducers2 });
+        const modules2 = { home, home2 };
+        const { Dispatch: Dispatch2, Query: Query2 } = createStore(modules2);
 
         Dispatch2.home.increase({ inc: 1 });
         expect(Query2.home.count).toBe(2);
@@ -85,14 +85,14 @@ describe("imdux object state", () => {
     });
 
     it("createAction", () => {
-        const home = createAction<State, Reducers>({ initialState, reducers });
-        const actions = { home };
+        const home = createModule<State, Reducers>({ initialState, reducers });
+        const modules = { home };
 
         expect(() => { home.dispatch.show(); }).toThrowError("call");
         expect(() => home.query.name).toThrowError("call");
         expect(() => home.query.count).toThrowError("call");
 
-        const { redux } = createStore(actions);
+        const { redux } = createStore(modules);
         expect(home.query.name).toBe("");
         expect(home.query.count).toBe(1);
 
@@ -129,9 +129,9 @@ describe("imdux object state", () => {
         expect(() => { home.query.count = 0; }).toThrowError("Cannot assign");
         expect(() => { home.query.name = ""; }).toThrowError("Cannot assign");
 
-        const home2 = createAction<State, Reducers>({ initialState, reducers: reducers2 });
-        const actions2 = { home, home2 };
-        createStore(actions2);
+        const home2 = createModule<State, Reducers>({ initialState, reducers: reducers2 });
+        const modules2 = { home, home2 };
+        createStore(modules2);
 
         home.dispatch.increase({ inc: 1 });
         expect(home.query.count).toBe(2);
@@ -139,9 +139,9 @@ describe("imdux object state", () => {
     });
 
     it("types", () => {
-        const home = createAction<State, Reducers>({ initialState, reducers });
-        const actions = { home };
-        const { Dispatch } = createStore(actions);
+        const home = createModule<State, Reducers>({ initialState, reducers });
+        const modules = { home };
+        const { Dispatch } = createStore(modules);
         Dispatch.home.hide("1");
         Dispatch.home.hide("2");
         Dispatch.home.hide("3");
@@ -174,9 +174,9 @@ describe("imdux value state", () => {
     };
 
     it("createStore", () => {
-        const home = createAction<State, Reducers>({ initialState, reducers });
-        const actions = { home };
-        const { Dispatch, Query, redux } = createStore(actions);
+        const home = createModule<State, Reducers>({ initialState, reducers });
+        const modules = { home };
+        const { Dispatch, Query, redux } = createStore(modules);
         expect(Query.home).toBe(1);
 
         let flag = 0;
@@ -199,13 +199,13 @@ describe("imdux value state", () => {
     });
 
     it("createAction", () => {
-        const home = createAction<State, Reducers>({ initialState, reducers });
-        const actions = { home };
+        const home = createModule<State, Reducers>({ initialState, reducers });
+        const modules = { home };
 
         expect(() => { home.dispatch.show(); }).toThrowError("call");
         expect(() => home.query).toThrowError("call");
 
-        const { redux } = createStore(actions);
+        const { redux } = createStore(modules);
         expect(home.query).toBe(1);
 
         let flag = 0;

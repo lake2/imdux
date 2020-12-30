@@ -3,11 +3,11 @@ import produce from "immer";
 import isPrimitiveType from "is-primitive";
 import isPlainObject from "is-plain-object";
 
-import { Imdux } from "./types";
 import { notInitialized, payloadNotValid, wrongModify } from "./error";
+import { Imdux } from "./types";
 
-export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.Action<S, R> {
-    return new class Action<S, R> implements Imdux.Action<S, R>{
+export function createModule<S, R>(params: Imdux.CreateModuleParams<S>): Imdux.Module<S, R> {
+    return new class Module<S, R> implements Imdux.Module<S, R>{
         namespace: string;
         redux: Redux.Store<any, Redux.AnyAction>;
         dispatch: any;
@@ -27,7 +27,7 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
                 } else if (namespace !== this.namespace) {
                     return state;
                 } else if (split.length >= 2 && this.reducers[type]) {
-                    return this.reducers[type](state, action.payload);
+                    return this.reducers[type](state, action);
                 } else {
                     return state;
                 }
@@ -39,7 +39,7 @@ export function createAction<S, R>(params: Imdux.CreateActionParams<S>): Imdux.A
                     let path = namespace + "/" + name;
                     if (typeof map[name] === "function") {
                         reducer = map[name];
-                        this.reducers[path] = (state: any, payload: any) => produce(state, (draft: any) => reducer(draft, payload));
+                        this.reducers[path] = (state: any, action: any) => produce(state, (draft: any) => reducer(draft, action.payload));
                         dispatch[name] = (payload: any) => {
                             if (!this.redux) {
                                 throw new Error(notInitialized);

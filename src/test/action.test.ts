@@ -1,7 +1,7 @@
-import { createAction, createStore } from "../";
+import { createModule, createStore } from "../";
 // import { Imdux } from "../types";
 
-describe("change action name", () => {
+describe("change module name", () => {
     type State = typeof initialState;
     type Reducers = typeof reducers;
 
@@ -47,9 +47,9 @@ describe("change action name", () => {
     it("createStore", () => {
         let flag: number;
 
-        const home = createAction<State, Reducers>({ initialState, reducers });
-        const actions = { home };
-        const { Dispatch, Query, redux } = createStore(actions);
+        const home = createModule<State, Reducers>({ initialState, reducers });
+        const modules = { home };
+        const { Dispatch, Query, redux } = createStore(modules);
 
         flag = 0;
         redux.subscribe(() => flag = 1);

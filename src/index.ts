@@ -1,4 +1,5 @@
-import { createAction } from "./createAction";
+import { createModule } from "./createModule";
 import { createStore } from "./createStore";
+import { getRootState } from "./getRootState";
 
-export { createAction, createStore };
+export { createModule, createStore, getRootState };
