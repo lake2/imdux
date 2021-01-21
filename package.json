@@ -54,7 +54,7 @@
         "webpack-dev-server": "^3.11.0"
     },
     "dependencies": {
-        "immer": "^5.3.6",
+        "immer": "^8.0.1",
         "is-plain-object": "^3.0.0",
         "is-primitive": "^3.0.1",
         "redux": "^4.0.5"
